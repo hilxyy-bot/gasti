@@ -36,8 +36,6 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   const { t, language } = useLanguage();
   useLockBodyScroll(isOpen);
 
-  if (!isOpen) return null;
-
   const todayStr = new Date().toISOString().split('T')[0];
   const defaultDate = todayStr.startsWith(currentYearMonth)
     ? todayStr
@@ -79,6 +77,8 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     }
     setError('');
   }, [editingExpense, initialCategoryId, isOpen, defaultDate, categories]);
+
+  if (!isOpen) return null;
 
   const selectedCategory = categories.find((c) => c.id === categoryId);
   const categoryBudget = selectedCategory

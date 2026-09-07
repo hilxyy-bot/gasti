@@ -25,7 +25,6 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
 }) => {
   const { t, language } = useLanguage();
   useLockBodyScroll(isOpen);
-  if (!isOpen) return null;
 
   const [name, setName] = useState(editingCategory?.name || '');
   const [percentage, setPercentage] = useState(
@@ -62,6 +61,8 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
     }
     setError('');
   }, [editingCategory, isOpen, financeMode]);
+
+  if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
