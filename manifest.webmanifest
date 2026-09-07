@@ -1,0 +1,27 @@
+{
+  "id": "/",
+  "name": "gasti — Control de Gastos y Presupuesto en %",
+  "short_name": "gasti",
+  "description": "Control inteligente de gastos, presupuestos en porcentajes, ritmo mensual y alertas automáticas.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#14532d",
+  "categories": ["finance", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/app-logo.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="logo-bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#15803d" />
+      <stop offset="50%" stop-color="#166534" />
+      <stop offset="100%" stop-color="#14532d" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="url(#logo-bg-grad)" />
+  <g stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Leaves -->
+    <path d="M246 175 C230 140, 205 130, 185 140 C175 160, 185 185, 246 175 Z" fill="#ffffff" />
+    <path d="M266 175 C282 135, 315 125, 340 135 C350 160, 335 185, 266 175 Z" fill="#ffffff" />
+    <!-- Bag -->
+    <path d="M225 195 C235 202, 277 202, 287 195" stroke-width="16" />
+    <path d="M230 200 C190 230, 175 290, 195 345 C215 390, 297 390, 317 345 C337 290, 322 230, 282 200 Z" stroke-width="18" />
+    <!-- Dollar -->
+    <path d="M256 248 L256 338" stroke-width="14" />
+    <path d="M272 268 C272 254, 240 254, 240 274 C240 292, 272 294, 272 314 C272 334, 240 334, 240 320" stroke-width="16" />
+    <!-- Hose -->
+    <path d="M205 345 C165 375, 140 345, 140 300 C140 260, 160 250, 172 245" stroke-width="16" />
+    <path d="M185 205 L215 190 L230 198" stroke-width="14" />
+    <!-- Coins -->
+    <path d="M312 342 C312 348, 324 353, 340 353 C356 353, 368 348, 368 342" stroke-width="14" />
+    <path d="M312 326 C312 332, 324 337, 340 337 C356 337, 368 332, 368 326" stroke-width="14" />
+    <ellipse cx="340" cy="294" rx="28" ry="9" fill="#ffffff" stroke-width="14" />
+  </g>
+</svg>
