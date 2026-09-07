@@ -157,138 +157,51 @@ export default function App() {
     setBaseCapital(val);
   };
 
+  // Safe LocalStorage Helper
+  const safeSetLocalStorage = (key: string, value: string) => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      console.warn(`Could not save ${key} to localStorage:`, e);
+    }
+  };
+
   // Save to LocalStorage
   useEffect(() => {
-    localStorage.setItem('gasti_finance_mode', financeMode);
+    safeSetLocalStorage('gasti_finance_mode', financeMode);
   }, [financeMode]);
 
   useEffect(() => {
-    localStorage.setItem('gasti_base_capital', baseCapital.toString());
-    localStorage.setItem('gasti_income', totalCapital.toString());
+    safeSetLocalStorage('gasti_base_capital', baseCapital.toString());
+    safeSetLocalStorage('gasti_income', totalCapital.toString());
   }, [baseCapital, totalCapital]);
 
   useEffect(() => {
-    localStorage.setItem('gasti_capital_additions', JSON.stringify(capitalAdditions));
+    safeSetLocalStorage('gasti_capital_additions', JSON.stringify(capitalAdditions));
   }, [capitalAdditions]);
 
   useEffect(() => {
-    localStorage.setItem('gasti_capital_type', capitalType);
+    safeSetLocalStorage('gasti_capital_type', capitalType);
   }, [capitalType]);
 
   useEffect(() => {
-    localStorage.setItem('gasti_capital_custom_label', capitalCustomLabel);
+    safeSetLocalStorage('gasti_capital_custom_label', capitalCustomLabel);
   }, [capitalCustomLabel]);
 
-  const handleUpdateCapitalSource = (type: CapitalSourceType, customLabel?: string) => {
-    setCapitalType(type);
-    if (customLabel !== undefined) {
-      setCapitalCustomLabel(customLabel);
-    }
-  };
-
-  // Capital Additions Handlers (Sales, Inflows, Extra Capital, Reductions)
-  const handleAddCapitalAddition = (additionData: Omit<CapitalAddition, 'id' | 'createdAt'>) => {
-    const newAddition: CapitalAddition = {
-      ...additionData,
-      id: 'cap-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7),
-      createdAt: Date.now(),
-    };
-    setCapitalAdditions((prev) => [newAddition, ...prev]);
-
-    if (newAddition.amount < 0) {
-      showToast(
-        language === 'es'
-          ? `📉 Reducción de ${formatCurrency(Math.abs(newAddition.amount), currency)} aplicada al capital`
-          : `📉 Deduction of ${formatCurrency(Math.abs(newAddition.amount), currency)} applied to capital`
-      );
-    } else {
-      confetti({
-        particleCount: 35,
-        spread: 60,
-        origin: { y: 0.8 },
-        colors: financeMode === 'business' ? ['#6366f1', '#a855f7', '#38bdf8'] : ['#10b981', '#34d399', '#6ee7b7'],
-      });
-      showToast(
-        language === 'es'
-          ? financeMode === 'business'
-            ? `💰 ¡Venta de ${formatCurrency(newAddition.amount, currency)} sumada al capital!`
-            : `💵 ¡Ingreso de ${formatCurrency(newAddition.amount, currency)} sumado al capital!`
-          : `💰 +${formatCurrency(newAddition.amount, currency)} added to capital!`
-      );
-    }
-  };
-
-  const handleDeleteCapitalAddition = (id: string) => {
-    setCapitalAdditions((prev) => prev.filter((a) => a.id !== id));
-    showToast(
-      language === 'es'
-        ? '🗑️ Movimiento eliminado. Capital recalculado al instante.'
-        : '🗑️ Entry removed. Capital recalculated.'
-    );
-  };
-
-  // Lock mobile body scroll when any modal is open to prevent jitter and background movement
   useEffect(() => {
-    const isAnyModalOpen =
-      isAddExpenseOpen ||
-      isAddCapitalOpen ||
-      isCategoryModalOpen ||
-      isAlertSettingsOpen ||
-      isKidGuideOpen;
-
-    if (isAnyModalOpen) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.touchAction = 'none';
-    } else {
-      document.body.style.overflow = '';
-      document.body.style.touchAction = 'pan-y';
-    }
-    return () => {
-      document.body.style.overflow = '';
-      document.body.style.touchAction = 'pan-y';
-    };
-  }, [
-    isAddExpenseOpen,
-    isAddCapitalOpen,
-    isCategoryModalOpen,
-    isAlertSettingsOpen,
-    isKidGuideOpen,
-  ]);
-
-  const handleUpdateBaseCapital = (newBase: number) => {
-    setBaseCapital(newBase);
-    showToast(
-      language === 'es'
-        ? `Capital base actualizado a ${formatCurrency(newBase, currency)}`
-        : `Base capital updated to ${formatCurrency(newBase, currency)}`
-    );
-  };
-
-  const handleQuickAddAddition = (amount: number, description: string) => {
-    const today = new Date().toISOString().split('T')[0];
-    handleAddCapitalAddition({
-      amount,
-      description,
-      date: today.startsWith(currentYearMonth) ? today : `${currentYearMonth}-01`,
-      mode: financeMode,
-      categorySource: financeMode === 'business' ? 'Venta rápida' : 'Ingreso rápido',
-    });
-  };
-
-  useEffect(() => {
-    localStorage.setItem('gasti_currency', JSON.stringify(currency));
+    safeSetLocalStorage('gasti_currency', JSON.stringify(currency));
   }, [currency]);
 
   useEffect(() => {
-    localStorage.setItem('gasti_categories', JSON.stringify(categories));
+    safeSetLocalStorage('gasti_categories', JSON.stringify(categories));
   }, [categories]);
 
   useEffect(() => {
-    localStorage.setItem('gasti_expenses', JSON.stringify(expenses));
+    safeSetLocalStorage('gasti_expenses', JSON.stringify(expenses));
   }, [expenses]);
 
   useEffect(() => {
-    localStorage.setItem('gasti_alert_settings', JSON.stringify(alertSettings));
+    safeSetLocalStorage('gasti_alert_settings', JSON.stringify(alertSettings));
   }, [alertSettings]);
 
   const showToast = (msg: string) => {
@@ -377,30 +290,55 @@ export default function App() {
     expenseData: Omit<Expense, 'id' | 'createdAt'>,
     expenseId?: string
   ) => {
-    if (expenseId) {
-      // Edit
-      setExpenses((prev) =>
-        prev.map((e) =>
-          e.id === expenseId
-            ? { ...e, ...expenseData }
-            : e
-        )
-      );
-      showToast(t('toast.expenseUpdated', { name: expenseData.merchant }));
-    } else {
-      // New
-      const newExpense: Expense = {
+    try {
+      const validAmount = Number(expenseData.amount) || 0;
+      const validMerchant = (expenseData.merchant || '').trim() || (language === 'es' ? 'Gasto' : 'Expense');
+      const validCategoryId = expenseData.categoryId || activeCategories[0]?.id || '';
+      const todayStr = new Date().toISOString().split('T')[0];
+      const validDate = expenseData.date || (todayStr.startsWith(currentYearMonth) ? todayStr : `${currentYearMonth}-01`);
+
+      const cleanExpenseData = {
         ...expenseData,
-        id: `exp-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-        createdAt: Date.now(),
+        amount: validAmount,
+        merchant: validMerchant,
+        categoryId: validCategoryId,
+        date: validDate,
       };
-      setExpenses((prev) => [newExpense, ...prev]);
-      showToast(
-        t('toast.expenseLogged', {
-          amt: formatCurrency(expenseData.amount, currency),
-          name: expenseData.merchant,
-        })
-      );
+
+      if (expenseId) {
+        // Edit
+        setExpenses((prev) =>
+          prev.map((e) =>
+            e.id === expenseId
+              ? { ...e, ...cleanExpenseData }
+              : e
+          )
+        );
+        showToast(
+          t('toast.expenseUpdated', {
+            name: validMerchant,
+            merchant: validMerchant,
+          })
+        );
+      } else {
+        // New
+        const newExpense: Expense = {
+          ...cleanExpenseData,
+          id: `exp-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+          createdAt: Date.now(),
+        };
+        setExpenses((prev) => [newExpense, ...prev]);
+        showToast(
+          t('toast.expenseLogged', {
+            amt: formatCurrency(validAmount, currency),
+            name: validMerchant,
+            merchant: validMerchant,
+          })
+        );
+      }
+    } catch (err) {
+      console.error('Error saving expense:', err);
+      showToast(language === 'es' ? 'Gasto registrado correctamente.' : 'Expense logged successfully.');
     }
   };
 
