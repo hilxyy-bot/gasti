@@ -188,6 +188,13 @@ export default function App() {
     safeSetLocalStorage('gasti_capital_custom_label', capitalCustomLabel);
   }, [capitalCustomLabel]);
 
+  const handleUpdateCapitalSource = (type: CapitalSourceType, customLabel?: string) => {
+    setCapitalType(type);
+    if (customLabel !== undefined) {
+      setCapitalCustomLabel(customLabel);
+    }
+  };
+
   useEffect(() => {
     safeSetLocalStorage('gasti_currency', JSON.stringify(currency));
   }, [currency]);
